@@ -13,6 +13,8 @@ Students can *always* download the entire project as a .zip file.
 Unzip the file and open your desired scene in Unity to see exactly what I demonstrated in class.
 This option is helpful if you need to see GameObjects, hierarchical GameObjects, Inspector-set values, components, etc.
 
-To download the entire repo, click on the green "Code" button. When the dropdown appears, choose "Download zip"
+To download the entire repo, click on the green "Code" button. When the dropdown appears, choose the "Download zip" option. 
+Unzip the file with your choice of program, find the scene you want to open, and check the project out in Unity's editor!
+
 <img width="1284" height="256" alt="image" src="https://github.com/user-attachments/assets/aa9dcad1-ef05-474e-80a8-869b730766e9" />
 
