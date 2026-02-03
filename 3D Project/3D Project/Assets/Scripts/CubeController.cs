@@ -3,12 +3,36 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;                   // Allows use of generic data structures
 
+/// <summary>
+/// Attached to the Cube Control GO.
+/// Spawns a new cube in the scene every X frames.
+/// </summary>
 public class CubeController : MonoBehaviour
 {
-    // Fields of this CubeController class (set their values in Inspector)
+    // ------------------------------------------------------------------------
+    // Fields of this CubeController class
+    // All of the values are set in the Inspector window.
+    // ------------------------------------------------------------------------
+
+    /// <summary>
+    /// Reference to the prefab I want to spawn multiple instances of.
+    /// </summary>
     public GameObject cubePrefab;
+
+    /// <summary>
+    /// Timer to control spawn frequency
+    /// </summary>
+    [SerializeField]
     private int timer;
+
+    /// <summary>
+    /// Amount of time passed before the timer resets
+    /// </summary>
     public int timeInterval;                        // Value: 150
+
+    /// <summary>
+    /// List of references to every spawned cube
+    /// </summary>
     public List<GameObject> spawnedCubeList;
 
     #region Old Variables (for students to see)
@@ -67,11 +91,20 @@ public class CubeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        SpawnCubeAtInterval();
+        RemoveOldCubes();
+    }
+
+    /// <summary>
+    /// A new cube is spawned in the scene at the specified timeInterval.
+    /// </summary>
+    public void SpawnCubeAtInterval()
+    {
         // Timing mechanism
         timer++;
 
-        // Once I've surpassed the interval, reset the timer and spawn an object
-        if(timer > timeInterval)
+        // Once I've surpassed the interval, reset the timer and spawn a cube
+        if (timer > timeInterval)
         {
             timer = 0;
 
@@ -84,5 +117,37 @@ public class CubeController : MonoBehaviour
             // Keep track of all spawned cubes in this handy dandy list
             spawnedCubeList.Add(spawnedCubeRef);
         }
+    }
+
+    /// <summary>
+    /// Removes cubes after a set amount of time.
+    /// </summary>
+    public void RemoveOldCubes()
+    {
+        // For loop, iteration through every spawned cube in the list
+        for(int i = 0; i < spawnedCubeList.Count; i++)
+        {
+            // Remove from the scene
+            Destroy(spawnedCubeList[i], 2f);
+
+            // Remove from the list ONLY after the object has been destroyed
+            if (spawnedCubeList[i] == null)
+            {
+                spawnedCubeList.Remove(spawnedCubeList[i]);
+            }
+        }
+
+        // Useful for debugging
+        /*
+        // For loop, iteration through every spawned cube in the list
+        for (int i = 0; i < spawnedCubeList.Count; i++)
+        {
+            if (spawnedCubeList[i] != null)
+            {
+                Debug.Log(spawnedCubeList[i].transform.position);
+
+            }
+        }
+        */
     }
 }
