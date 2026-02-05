@@ -68,7 +68,7 @@ public class FloorCollision : MonoBehaviour
     /// (Interval Changer) and the floor GameObject
     /// </summary>
     /// <param name="collision">Reference with collision information</param>
-    public void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider collision)
     {
         // As long as this object collides with the floor:
         if(collision.gameObject == floorGO)
