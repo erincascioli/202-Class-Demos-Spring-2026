@@ -54,6 +54,11 @@ public class CubeController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Vector2 vec1 = new Vector2(2, 1);
+        Vector2 vec2 = new Vector2(10, 10);
+        Vector2 addedVectors = vec1 + vec2;
+
+
         #region Old variables values (for students to see)
         /*
         number = 5;
@@ -67,9 +72,10 @@ public class CubeController : MonoBehaviour
         #endregion
 
         #region Modifying the transform position (for students to see)
-        /*
+        
         // Change X position to 100
-        //transform.position.x = 100; NOOOOOOOOOOOOOOOOOOOOOOOO
+        //transform.position.x = 100;   // NOOOOOOOOOOOOOOOOOOOOOOOO
+
         // MOVING THE EMPTY CUBE CONTROL GO TO (100, 0, 0) IN THE SCENE
         // Copy-Alter-Replace
         Vector3 positionCopy = transform.position;
@@ -84,7 +90,7 @@ public class CubeController : MonoBehaviour
             100,                                    // X
             transform.position.y,                   // Y    
             transform.position.z);                  // Z
-        */
+        
         #endregion
     }
 
