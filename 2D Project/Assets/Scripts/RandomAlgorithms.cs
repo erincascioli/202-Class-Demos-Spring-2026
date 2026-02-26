@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 // Custom enum used for controlling the program's "mode"
 public enum RandomAlgorithm
@@ -6,13 +8,19 @@ public enum RandomAlgorithm
     Uniform,
     Nonuniform,
     Gaussian,
-    Perlin
+    Perlin,
+    Erratic
 }
 
 public class RandomAlgorithms : MonoBehaviour
 {
     //Prefab that will be instantiated via code
     public GameObject squarePrefab;
+
+    public GameObject movingPrefab;
+
+    public float timeStep;              // Difference in sampling interval
+    private float accumTime;            // Current sampling time
 
     /// <summary>
     /// Which "mode" the program is in. This is controlled in the Inspector.
@@ -21,15 +29,24 @@ public class RandomAlgorithms : MonoBehaviour
     
     void Start()
     {
-        if(currentAlgorithm == RandomAlgorithm.Uniform)
+        if (currentAlgorithm == RandomAlgorithm.Uniform)
             UniformRandomInstantiation();
-        else if(currentAlgorithm == RandomAlgorithm.Nonuniform)
+        else if (currentAlgorithm == RandomAlgorithm.Nonuniform)
             NonUniformRandomInstantiation();
+        else if (currentAlgorithm == RandomAlgorithm.Gaussian)
+            GaussianInstantiation();
+        else if (currentAlgorithm == RandomAlgorithm.Erratic)
+            ErraticUniform();
+        else if (currentAlgorithm == RandomAlgorithm.Perlin)
+            PerlinNoiseMovement();
     }
 
     void Update()
     {
-        
+        if (currentAlgorithm == RandomAlgorithm.Erratic)
+            ErraticUniform();
+        else if (currentAlgorithm == RandomAlgorithm.Perlin)
+            PerlinNoiseMovement();
     }
 
     /// <summary>
@@ -100,4 +117,58 @@ public class RandomAlgorithms : MonoBehaviour
                 Quaternion.identity);
         }
     }
+
+    // Provided by Erin Cascioli for IGME 202
+    public float Gaussian(float mean, float stdDev)
+    {
+        float val1 = Random.Range(0f, 1f);
+        float val2 = Random.Range(0f, 1f);
+        float gaussValue =
+                 Mathf.Sqrt(-2.0f * Mathf.Log(val1)) *
+                 Mathf.Sin(2.0f * Mathf.PI * val2);
+        return mean + stdDev * gaussValue;
+    }
+
+    public void GaussianInstantiation()
+    {
+        for (int i = 0; i < 1000; i++)
+        {
+            float xPosition = Gaussian(0, 6);       // 96% -6 to 6, 99% -9 to 9
+            float yPosition = Gaussian(0, 3.5f);       
+
+            // Instantiate the square at that position
+            Instantiate(
+                squarePrefab,
+                new Vector3(xPosition, yPosition, 0),
+                Quaternion.identity);
+        }
+    }
+
+    public void ErraticUniform()
+    {
+        // Uniform random Y position
+        float randomYPosition = Random.Range(-5f, 5f);
+
+        // Static X and X position but object will float over time.
+        movingPrefab.transform.position = 
+            new Vector3(0, randomYPosition, 0);
+    }
+
+    public void PerlinNoiseMovement()
+    {
+        // Have a single square repoisition on the Y axis using Perlin noise values
+        // Sample every so often (time step)
+        // 1D perlin noise:  X --> 0, Y --> increase by timestep.
+        // Instantiate the square at that position
+
+        accumTime += timeStep;
+
+        float perlinValue = Mathf.PerlinNoise(0, accumTime) * 5;
+        movingPrefab.transform.position = 
+            new Vector3(
+                movingPrefab.transform.position.x,                  // Keep X
+                perlinValue,                                        // Reassign Y
+                movingPrefab.transform.position.z);                 // Keep Z
+    }
+
 }
