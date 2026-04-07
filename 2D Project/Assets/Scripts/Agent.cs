@@ -15,13 +15,30 @@ public abstract class Agent : MonoBehaviour
 
     void Start()
     {
-        
+        // Start with this object's local position vector from its transform component
+        position = transform.position;
     }
 
     void Update()
     {
-        
+        // Code movement formula:
+        // - Clear out acceleration
+        acceleration = Vector3.zero;
+        // - Calculate acceleration (CalcSteering)
+        acceleration = CalcSteeringForce();
+        // - Add that to velocity
+        velocity += acceleration * Time.deltaTime;
+        // - Add velocity to position
+        position += velocity * Time.deltaTime;
+
+        // Change the transform to this calculated position
+        transform.position = position;
     }
+
+    // Declare abstract CalcSteeringForce method here!
+    // NO BODY - only declaration
+    // ALL children are required to implement this
+    public abstract Vector3 CalcSteeringForce();
 
     // ------------------------------------------------------------------------
     // Code Seek(), Flee(), Arrive() and ALL other steering behaviors here
@@ -34,7 +51,7 @@ public abstract class Agent : MonoBehaviour
     /// <returns>Steering force to seek a position in the scene</returns>
     public Vector3 Seek(Vector3 targetPosition)
     {
-        // step 1: Get a vector pointing toward the target's location
+        // Step 1: Get a vector pointing toward the target's location
         Vector3 desiredVelocity = targetPosition - transform.position;
 
         // Step 2: Scale it to the max speed
