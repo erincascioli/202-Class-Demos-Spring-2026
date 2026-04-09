@@ -11,7 +11,7 @@ public abstract class Agent : MonoBehaviour
     public float maxSpeed;
 
     // Other data (will complete as we need it)
-
+    public float maxForce;
 
     void Start()
     {
@@ -24,10 +24,19 @@ public abstract class Agent : MonoBehaviour
         // Code movement formula:
         // - Clear out acceleration
         acceleration = Vector3.zero;
-        // - Calculate acceleration (CalcSteering)
-        acceleration = CalcSteeringForce();
+
+        // - Calculate steering force (CalcSteering)
+        Vector3 steeringForce = CalcSteeringForce();
+
+        // Limit the acceleration by a maximum force
+        steeringForce = Vector3.ClampMagnitude(steeringForce, maxForce);
+
+        // Apply the steering force to the acceleration
+        acceleration += steeringForce;
+
         // - Add that to velocity
         velocity += acceleration * Time.deltaTime;
+
         // - Add velocity to position
         position += velocity * Time.deltaTime;
 

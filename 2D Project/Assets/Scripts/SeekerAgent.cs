@@ -4,13 +4,13 @@ using UnityEngine;
 public class SeekerAgent : Agent
 {
     // Child-specific data
-    public Vector3 targetLocation;
+    public GameObject targetGO;
 
     // NO START OR UPDATE HERE IN THE CHILD
 
     public override Vector3 CalcSteeringForce()
     {
         // Call every steering force that this child wants to implement
-        return Seek(targetLocation);
+        return Seek(targetGO);
     }
 }
